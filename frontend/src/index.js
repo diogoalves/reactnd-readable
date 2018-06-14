@@ -1,28 +1,36 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
-import './index.css';
 import App from './components/App';
 import registerServiceWorker from './registerServiceWorker';
+import { createBrowserHistory } from 'history';
 import { createStore, applyMiddleware, compose } from 'redux';
 import reducer from './reducers';
+import {
+  connectRouter,
+  routerMiddleware,
+  ConnectedRouter
+} from 'connected-react-router';
 import createSagaMiddleware from 'redux-saga';
 
 const initialState = {};
+const history = createBrowserHistory();
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
-const middleware = [createSagaMiddleware()];
+const middleware = [routerMiddleware(history), createSagaMiddleware()];
 
 const store = createStore(
-  reducer,
+  connectRouter(history)(reducer),
   initialState,
   composeEnhancers(applyMiddleware(...middleware))
 );
 
 ReactDOM.render(
   <Provider store={store}>
-    <App />
+    <ConnectedRouter history={history}>
+      <App />
+    </ConnectedRouter>
   </Provider>,
   document.getElementById('root')
 );
