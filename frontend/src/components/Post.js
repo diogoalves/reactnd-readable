@@ -8,7 +8,15 @@ import { format } from 'date-fns';
 
 class Post extends Component {
   render() {
-    const { id, timestamp, title, body, author, category } = this.props.data;
+    const {
+      id,
+      timestamp,
+      title,
+      body,
+      author,
+      category,
+      voteScore
+    } = this.props.data;
     return (
       <Card>
         <CardContent>
@@ -20,6 +28,7 @@ class Post extends Component {
             {`Posted by ${author} on ${format(timestamp, 'DD/MM/YYYY')}`}
           </Typography>
           <Typography component="p">{body}</Typography>
+          <Typography color="textSecondary">{`${voteScore} votes`}</Typography>
         </CardContent>
         <CardActions>
           <Button size="small">Edit</Button>

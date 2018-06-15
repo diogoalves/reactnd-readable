@@ -10,11 +10,9 @@ export const REMOVE_COMMENT = 'REMOVE_COMMENT';
 export const UPVOTE_COMMENT = 'UPVOTE_COMMENT';
 export const DOWNVOTE_COMMENT = 'DOWNVOTE_COMMENT';
 
-export const ORDER_BY_TIME = 'ORDER_BY_TIME';
-export const ORDER_BY_VOTES = 'ORDER_BY_VOTES';
-
 export const UPDATE_ALL = 'UPDATE_ALL';
 export const SELECT_CATEGORY = 'SELECT_CATEGORY';
+export const SELECT_ORDERING = 'SELECT_ORDERING';
 
 export const addPost = (title, body, author, category) => ({
   type: ADD_POST,
@@ -65,15 +63,17 @@ export const downVoteComment = id => ({
   id
 });
 
-export const orderByTime = () => ({
-  type: ORDER_BY_TIME
-});
-
-export const orderByVotes = () => ({
-  type: ORDER_BY_VOTES
-});
-
 export const updateAll = data => ({
   type: UPDATE_ALL,
   data
+});
+
+export const selectCategory = index => ({
+  type: SELECT_CATEGORY,
+  index
+});
+
+export const selectOrdering = index => ({
+  type: SELECT_ORDERING,
+  index
 });

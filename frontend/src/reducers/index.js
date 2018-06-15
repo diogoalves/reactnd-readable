@@ -1,34 +1,17 @@
 // import { combineReducers } from 'redux';
-import {
-  ORDER_BY_TIME,
-  ORDER_BY_VOTES,
-  UPDATE_ALL,
-  SELECT_CATEGORY
-} from '../actions';
+import { UPDATE_ALL, SELECT_CATEGORY, SELECT_ORDERING } from '../actions';
 
 export const initialState = {
   categories: [],
   posts: [],
   comments: [],
-  orderBy: 'votes',
+  ordering: 0,
   selectedCategoryIndex: 0
 };
 
 const post = (state = { a: 1 }, action) => {
   const { type } = action;
   switch (type) {
-    case ORDER_BY_TIME:
-      return {
-        ...state,
-        orderBy: 'time'
-      };
-
-    case ORDER_BY_VOTES:
-      return {
-        ...state,
-        orderBy: 'votes'
-      };
-
     case UPDATE_ALL:
       return {
         ...state,
@@ -40,6 +23,13 @@ const post = (state = { a: 1 }, action) => {
         ...state,
         selectedCategoryIndex: action.index
       };
+
+    case SELECT_ORDERING:
+      return {
+        ...state,
+        ordering: action.index
+      };
+
     default:
       return state;
   }
