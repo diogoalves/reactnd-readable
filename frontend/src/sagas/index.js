@@ -1,4 +1,4 @@
-import { call, put, takeLatest } from 'redux-saga/effects'
+import { call, put, takeLatest } from 'redux-saga/effects';
 import Api from '../utils/api';
 import {
   // ADD_POST,
@@ -11,17 +11,16 @@ import {
   // DOWNVOTE_COMMENT,
   updateAll
 } from '../actions';
-
+import { initialState } from '../reducers';
 
 function* fetchAll(action) {
   const categories = yield call(Api.getAllCategories);
   const posts = yield call(Api.getAllPosts);
-  yield put(updateAll({...categories, posts:posts }));
+  yield put(updateAll({ ...initialState, ...categories, posts: posts }));
 }
 
-
 function* mySaga() {
-  yield takeLatest("INIT", fetchAll);
+  yield takeLatest('INIT', fetchAll);
 }
 
 export default mySaga;
