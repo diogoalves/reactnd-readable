@@ -12,16 +12,33 @@ const headers = {
 };
 
 export const getAllCategories = () =>
-  fetch(`${api}/categories`, { headers })
-    .then(res => res.json());
-   
+  fetch(`${api}/categories`, { headers }).then(res => res.json());
 
 export const getAllPosts = () =>
-  fetch(`${api}/posts`, { headers })
-    .then(res => res.json());
-    
+  fetch(`${api}/posts`, { headers }).then(res => res.json());
+
+export const addPost = (id, timestamp, title, body, author, category) =>
+  fetch(`${api}/posts`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id, timestamp, title, body, author, category })
+  }).then(res => res.json());
+
+export const update = (book, shelf) =>
+  fetch(`${api}/books/${book.id}`, {
+    method: 'PUT',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ shelf })
+  }).then(res => res.json());
 
 export default {
   getAllCategories,
-  getAllPosts
-}
+  getAllPosts,
+  addPost
+};

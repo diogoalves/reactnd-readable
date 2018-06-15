@@ -1,4 +1,4 @@
-import React, { Commponent, Component } from 'react';
+import React, { Component } from 'react';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import RestoreIcon from '@material-ui/icons/Restore';

@@ -1,6 +1,8 @@
 import guid from '../utils/guid';
 
 export const ADD_POST = 'ADD_POST';
+export const EDIT_POST = 'EDIT_POST';
+export const UPDATE_POST = 'UPDATE_POST';
 export const REMOVE_POST = 'REMOVE_POST';
 export const UPVOTE_POST = 'UPVOTE_POST';
 export const DOWNVOTE_POST = 'DOWNVOTE_POST';
@@ -17,6 +19,16 @@ export const SELECT_ORDERING = 'SELECT_ORDERING';
 export const addPost = (title, body, author, category) => ({
   type: ADD_POST,
   id: guid(),
+  timestamp: Date.now(),
+  title,
+  body,
+  author,
+  category
+});
+
+export const editPost = (id, title, body, author, category) => ({
+  type: UPDATE_POST,
+  id,
   timestamp: Date.now(),
   title,
   body,

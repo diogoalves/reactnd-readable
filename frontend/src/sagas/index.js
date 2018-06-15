@@ -1,7 +1,8 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
 import Api from '../utils/api';
 import {
-  // ADD_POST,
+  ADD_POST,
+  UPDATE_POST,
   // REMOVE_POST,
   // UPVOTE_POST,
   // DOWNVOTE_POST,
@@ -19,8 +20,38 @@ function* fetchAll(action) {
   yield put(updateAll({ ...initialState, ...categories, posts: posts }));
 }
 
+function* addPost(action) {
+  const { id, timestamp, title, body, author, category } = action;
+  const post = yield call(
+    Api.addPost,
+    id,
+    timestamp,
+    title,
+    body,
+    author,
+    category
+  );
+  yield put(updateAll({ posts: post }));
+}
+
+function* updatePost(action) {
+  const { id, timestamp, title, body, author, category } = action;
+  const post = yield call(
+    Api.addPost,
+    id,
+    timestamp,
+    title,
+    body,
+    author,
+    category
+  );
+  yield put(updateAll({ posts: post }));
+}
+
 function* mySaga() {
   yield takeLatest('INIT', fetchAll);
+  yield takeLatest(ADD_POST, addPost);
+  yield takeLatest(UPDATE_POST, updatePost);
 }
 
 export default mySaga;

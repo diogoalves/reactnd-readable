@@ -4,9 +4,10 @@ import withRoot from '../withRoot';
 import Categories from './Categories';
 import Posts from './Posts';
 import OrderBar from './OrderBar';
-import { selectCategory, selectOrdering } from '../actions';
+import FormPost from './FormPost';
 
-// import Paper from '@material-ui/core/Paper';
+import { selectCategory, selectOrdering, addPost, editPost } from '../actions';
+
 import Grid from '@material-ui/core/Grid';
 
 const filterPosts = (posts, selectedCategoryIndex, categories) => {
@@ -38,7 +39,9 @@ class App extends Component {
       setCategory,
       posts,
       ordering,
-      setOrdering
+      setOrdering,
+      addPost,
+      editPost
     } = this.props;
     const filtredPosts = filterPosts(posts, selectedCategoryIndex, categories);
     const filteredAndOrderedPosts = orderPosts(filtredPosts, ordering);
@@ -52,6 +55,7 @@ class App extends Component {
               setCategory={setCategory}
             />
             <OrderBar index={ordering} change={setOrdering} />
+            <FormPost addPost={addPost} editPost={editPost} />
             <Posts posts={filteredAndOrderedPosts} />
           </Grid>
         </Grid>
@@ -70,7 +74,11 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   init: () => dispatch({ type: 'INIT' }),
   setCategory: (event, value) => dispatch(selectCategory(value)),
-  setOrdering: (event, value) => dispatch(selectOrdering(value))
+  setOrdering: (event, value) => dispatch(selectOrdering(value)),
+  addPost: (title, body, author, category) =>
+    dispatch(addPost(title, body, author, category)),
+  editPost: (title, body, author, category) =>
+    dispatch(editPost(title, body, author, category))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRoot(App));
