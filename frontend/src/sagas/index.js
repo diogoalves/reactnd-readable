@@ -14,7 +14,7 @@ import {
 } from '../actions';
 import { initialState } from '../reducers';
 
-function* fetchAll(action) {
+function* fetchAll() {
   const categories = yield call(Api.getAllCategories);
   const posts = yield call(Api.getAllPosts);
   yield put(updateAll({ ...initialState, ...categories, posts: posts }));
@@ -22,16 +22,8 @@ function* fetchAll(action) {
 
 function* addPost(action) {
   const { id, timestamp, title, body, author, category } = action;
-  const post = yield call(
-    Api.addPost,
-    id,
-    timestamp,
-    title,
-    body,
-    author,
-    category
-  );
-  yield put(updateAll({ posts: post }));
+  yield call(Api.addPost, id, timestamp, title, body, author, category);
+  yield call(fetchAll);
 }
 
 function* updatePost(action) {
