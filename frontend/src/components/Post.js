@@ -1,4 +1,7 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { removePost, upVotePost, downVotePost } from '../actions';
+
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
@@ -15,7 +18,7 @@ const styles = theme => ({
 
 class Post extends Component {
   render() {
-    const { classes } = this.props;
+    const { classes, upVote, downVote, removeVote } = this.props;
 
     const {
       id,
@@ -40,11 +43,20 @@ class Post extends Component {
           <Typography color="textSecondary">{`${voteScore} votes`}</Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">OPEN</Button>
+        <Button size="small" onClick={upVote}>▲UPVOTE</Button>
+        <Button size="small" onClick={downVote}>▼DOWNVOTE</Button>
+        <Button size="small" onClick={removeVote}>REMOVE</Button>
+        <Button size="small">EDIT</Button>
         </CardActions>
       </Card>
     );
   }
 }
 
-export default withStyles(styles)(Post);
+const mapDispatchToProps = (dispatch, ownProps) => ({
+  upVote: () => dispatch(upVotePost(ownProps.data.id)),
+  downVote: () => dispatch(downVotePost(ownProps.data.id)),
+  removeVote: () => dispatch(removePost(ownProps.data.id))
+});
+
+export default connect(null, mapDispatchToProps)(withStyles(styles)(Post));

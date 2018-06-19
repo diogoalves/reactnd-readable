@@ -11,7 +11,7 @@ class Categories extends React.Component {
     return (
       <div>
         <AppBar position="static" color="default">
-          <Typography variant="button">Readable</Typography>
+          {/*<Typography variant="button">Readable</Typography>*/}
           <Tabs
             value={selectedCategoryIndex || 0}
             onChange={setCategory}

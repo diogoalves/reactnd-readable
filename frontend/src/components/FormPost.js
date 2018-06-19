@@ -6,13 +6,10 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import { withStyles } from '@material-ui/core/styles';
-import AddIcon from '@material-ui/icons/Add';
 
 const styles = theme => ({
   button: {
-    margin: theme.spacing.unit,
-    position: 'absolute',
-    right: 0
+    margin: theme.spacing.unit
   }
 });
 
@@ -66,10 +63,9 @@ class FormPost extends Component {
           className={classes.button}
           variant="contained"
           color="secondary"
-          variant="fab"
           onClick={this.handleClickOpen}
         >
-          <AddIcon />
+          NEW POST
         </Button>
         <Dialog
           open={this.state.open}
