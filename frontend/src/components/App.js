@@ -68,7 +68,8 @@ const mapStateToProps = state => ({
   categories: state.categories,
   selectedCategoryIndex: state.selectedCategoryIndex,
   posts: state.posts,
-  ordering: state.ordering
+  ordering: state.ordering,
+  selectedPost: state.selectedPost
 });
 
 const mapDispatchToProps = dispatch => ({

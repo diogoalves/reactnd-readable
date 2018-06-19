@@ -4,10 +4,19 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
+import { withStyles } from '@material-ui/core/styles';
 import { format } from 'date-fns';
+
+const styles = theme => ({
+  card: {
+    margin: theme.spacing.unit * 2
+  }
+});
 
 class Post extends Component {
   render() {
+    const { classes } = this.props;
+
     const {
       id,
       timestamp,
@@ -18,7 +27,7 @@ class Post extends Component {
       voteScore
     } = this.props.data;
     return (
-      <Card>
+      <Card className={classes.card}>
         <CardContent>
           <Typography color="textSecondary">{category}</Typography>
           <Typography variant="headline" component="h2">
@@ -31,12 +40,11 @@ class Post extends Component {
           <Typography color="textSecondary">{`${voteScore} votes`}</Typography>
         </CardContent>
         <CardActions>
-          <Button size="small">Edit</Button>
-          <Button size="small">Remove</Button>
+          <Button size="small">OPEN</Button>
         </CardActions>
       </Card>
     );
   }
 }
 
-export default Post;
+export default withStyles(styles)(Post);
