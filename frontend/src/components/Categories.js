@@ -4,10 +4,18 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 
 class Categories extends React.Component {
-  handleChange = newIndex => {};
+  handleChange = (event, value) => {
+    const {data, goTo } = this.props;
+    if( (value-1) >= 0 && (value-1) < data.length ) {
+      goTo(data[value-1].name);
+    } else {
+      goTo("");
+    }
+    
+  };
 
   render() {
-    const { data, selected, setCategory } = this.props;
+    const { data, selected } = this.props;
     const value = data.findIndex((e, i) => {
       if (e.name === selected) {
         return true;
@@ -20,7 +28,7 @@ class Categories extends React.Component {
       <AppBar position="static" color="default">
         <Tabs
           value={value + 1}
-          onChange={setCategory}
+          onChange={this.handleChange}
           indicatorColor="primary"
           textColor="primary"
           scrollable

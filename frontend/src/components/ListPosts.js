@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Categories from './Categories';
+import { push } from 'connected-react-router'
 
 class ListPosts extends Component {
   componentDidMount = () => {
@@ -8,11 +9,10 @@ class ListPosts extends Component {
   };
 
   render() {
-    const { categories, currentCategory } = this.props;
-    console.log(this);
+    const { categories, currentCategory, goTo } = this.props;
     return (
       <div>
-        <Categories data={categories} selected={currentCategory} />
+        <Categories data={categories} selected={currentCategory} goTo={goTo} />
       </div>
     );
   }
@@ -25,7 +25,8 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  init: () => dispatch({ type: 'INIT' })
+  init: () => dispatch({ type: 'INIT' }),
+  goTo: (category) => dispatch(push(`/${category}`))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(ListPosts);
