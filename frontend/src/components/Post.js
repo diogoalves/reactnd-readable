@@ -21,7 +21,7 @@ class Post extends Component {
     const { classes, upVote, downVote, removeVote } = this.props;
 
     const {
-      id,
+      // id,
       timestamp,
       title,
       body,
@@ -43,10 +43,16 @@ class Post extends Component {
           <Typography color="textSecondary">{`${voteScore} votes`}</Typography>
         </CardContent>
         <CardActions>
-        <Button size="small" onClick={upVote}>▲UPVOTE</Button>
-        <Button size="small" onClick={downVote}>▼DOWNVOTE</Button>
-        <Button size="small" onClick={removeVote}>REMOVE</Button>
-        <Button size="small">EDIT</Button>
+          <Button size="small" onClick={upVote}>
+            ▲UPVOTE
+          </Button>
+          <Button size="small" onClick={downVote}>
+            ▼DOWNVOTE
+          </Button>
+          <Button size="small" onClick={removeVote}>
+            REMOVE
+          </Button>
+          <Button size="small">EDIT</Button>
         </CardActions>
       </Card>
     );

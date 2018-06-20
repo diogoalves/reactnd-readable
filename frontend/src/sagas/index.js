@@ -12,7 +12,6 @@ import {
   // DOWNVOTE_COMMENT,
   updateAll
 } from '../actions';
-import { initialState } from '../reducers';
 
 function* fetchAll() {
   const categories = yield call(Api.getAllCategories);
