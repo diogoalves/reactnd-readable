@@ -7,9 +7,9 @@ class Categories extends React.Component {
   handleChange = (event, value) => {
     const {data, goTo } = this.props;
     if( (value-1) >= 0 && (value-1) < data.length ) {
-      goTo(data[value-1].name);
+      goTo(`/${data[value-1].name}`);
     } else {
-      goTo("");
+      goTo('/');
     }
     
   };

@@ -5,6 +5,7 @@ import Posts from './Posts';
 import OrderBar from './OrderBar';
 import { push } from 'connected-react-router';
 import { selectOrdering } from '../actions';
+import Button from '@material-ui/core/Button';
 
 class ListPosts extends Component {
   componentDidMount = () => {
@@ -41,6 +42,7 @@ class ListPosts extends Component {
     return (
       <div>
         <Categories data={categories} selected={currentCategory} goTo={goTo} />
+        <Button variant="contained" color="secondary" onClick={() => goTo('posts/new')} >NEW POST</Button>
         <Posts posts={filteredAndOrderedPosts} />
         <OrderBar index={ordering} change={setOrdering} />
       </div>
@@ -57,7 +59,7 @@ const mapStateToProps = (state, ownProps) => ({
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   init: () => dispatch({ type: 'INIT' }),
-  goTo: category => dispatch(push(`/${category}`)),
+  goTo: target => dispatch(push(target)),
   setOrdering: (event, value) => dispatch(selectOrdering(value))
 });
 
