@@ -1,12 +1,11 @@
 // import { combineReducers } from 'redux';
-import { UPDATE_ALL, SELECT_CATEGORY, SELECT_ORDERING } from '../actions';
+import { UPDATE_ALL, SELECT_ORDERING } from '../actions';
 
 export const initialState = {
   categories: [],
   posts: [],
   comments: [],
-  ordering: 0,
-  selectedCategoryIndex: 0
+  ordering: 0
 };
 
 const post = (state = { a: 1 }, action) => {
@@ -16,12 +15,6 @@ const post = (state = { a: 1 }, action) => {
       return {
         ...state,
         ...action.data
-      };
-
-    case SELECT_CATEGORY:
-      return {
-        ...state,
-        selectedCategoryIndex: action.index
       };
 
     case SELECT_ORDERING:

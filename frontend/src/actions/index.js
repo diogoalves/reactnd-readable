@@ -13,7 +13,6 @@ export const UPVOTE_COMMENT = 'UPVOTE_COMMENT';
 export const DOWNVOTE_COMMENT = 'DOWNVOTE_COMMENT';
 
 export const UPDATE_ALL = 'UPDATE_ALL';
-export const SELECT_CATEGORY = 'SELECT_CATEGORY';
 export const SELECT_ORDERING = 'SELECT_ORDERING';
 
 export const addPost = (title, body, author, category) => ({
@@ -78,11 +77,6 @@ export const downVoteComment = id => ({
 export const updateAll = data => ({
   type: UPDATE_ALL,
   data
-});
-
-export const selectCategory = index => ({
-  type: SELECT_CATEGORY,
-  index
 });
 
 export const selectOrdering = index => ({
