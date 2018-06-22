@@ -15,6 +15,9 @@ export const DOWNVOTE_COMMENT = 'DOWNVOTE_COMMENT';
 export const UPDATE_ALL = 'UPDATE_ALL';
 export const SELECT_ORDERING = 'SELECT_ORDERING';
 
+export const INIT = 'INIT';
+export const FETCH_POST_DETAIL = 'FETCH_POST_DETAIL';
+
 export const addPost = (title, body, author, category) => ({
   type: ADD_POST,
   id: guid(),
@@ -59,19 +62,22 @@ export const addComment = (body, author, parentId) => ({
   parentId
 });
 
-export const removeComment = id => ({
+export const removeComment = (id, post_id) => ({
   type: REMOVE_COMMENT,
-  id
+  id,
+  post_id
 });
 
-export const upVoteComment = id => ({
+export const upVoteComment = (id, post_id) => ({
   type: UPVOTE_COMMENT,
-  id
+  id,
+  post_id
 });
 
-export const downVoteComment = id => ({
+export const downVoteComment = (id, post_id) => ({
   type: DOWNVOTE_COMMENT,
-  id
+  id,
+  post_id
 });
 
 export const updateAll = data => ({
@@ -82,4 +88,9 @@ export const updateAll = data => ({
 export const selectOrdering = index => ({
   type: SELECT_ORDERING,
   index
+});
+
+export const fetchPostDetails = post_id => ({
+  type: FETCH_POST_DETAIL,
+  post_id
 });

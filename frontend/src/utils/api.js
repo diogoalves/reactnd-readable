@@ -17,6 +17,14 @@ export const getAllCategories = () =>
 export const getAllPosts = () =>
   fetch(`${api}/posts`, { headers }).then(res => res.json());
 
+export const getPost = post_id =>
+  fetch(`${api}/posts/${post_id}`, { headers }).then(res => res.json());
+
+export const getCommentsByPostId = post_id =>
+  fetch(`${api}/posts/${post_id}/comments`, { headers }).then(res =>
+    res.json()
+  );
+
 export const addPost = (id, timestamp, title, body, author, category) =>
   fetch(`${api}/posts`, {
     method: 'POST',
@@ -27,33 +35,62 @@ export const addPost = (id, timestamp, title, body, author, category) =>
     body: JSON.stringify({ id, timestamp, title, body, author, category })
   }).then(res => res.json());
 
-export const upVotePost = (id) =>
+export const upVotePost = id =>
   fetch(`${api}/posts/${id}`, {
     method: 'POST',
     headers: {
       ...headers,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ "option": "upVote" })
+    body: JSON.stringify({ option: 'upVote' })
   }).then(res => res.json());
 
-export const downVotePost = (id) =>
+export const downVotePost = id =>
   fetch(`${api}/posts/${id}`, {
     method: 'POST',
     headers: {
       ...headers,
       'Content-Type': 'application/json'
     },
-    body: JSON.stringify({ "option": "downVote" })
+    body: JSON.stringify({ option: 'downVote' })
   }).then(res => res.json());
 
-export const removePost = (id) =>
+export const removePost = id =>
   fetch(`${api}/posts/${id}`, {
     method: 'DELETE',
     headers: {
       ...headers,
       'Content-Type': 'application/json'
+    }
+  }).then(res => res.json());
+
+export const upVoteComment = id =>
+  fetch(`${api}/comments/${id}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
     },
+    body: JSON.stringify({ option: 'upVote' })
+  }).then(res => res.json());
+
+export const downVoteComment = id =>
+  fetch(`${api}/comments/${id}`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ option: 'downVote' })
+  }).then(res => res.json());
+
+export const removeComment = id =>
+  fetch(`${api}/comments/${id}`, {
+    method: 'DELETE',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    }
   }).then(res => res.json());
 
 export const update = (book, shelf) =>
@@ -69,8 +106,13 @@ export const update = (book, shelf) =>
 export default {
   getAllCategories,
   getAllPosts,
+  getPost,
+  getCommentsByPostId,
   addPost,
   upVotePost,
   downVotePost,
-  removePost
+  removePost,
+  upVoteComment,
+  downVoteComment,
+  removeComment
 };

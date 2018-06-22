@@ -1,11 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Categories from './Categories';
-import Posts from './Posts';
 import OrderBar from './OrderBar';
 import { push } from 'connected-react-router';
 import { selectOrdering } from '../actions';
 import Button from '@material-ui/core/Button';
+import { format } from 'date-fns';
+import Card from '@material-ui/core/Card';
+import CardHeader from '@material-ui/core/CardHeader';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = theme => ({
+  card: {
+    marginBottom: theme.spacing.unit * 2,
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit
+  },
+  button: {
+    margin: theme.spacing.unit
+  }
+});
 
 class ListPosts extends Component {
   componentDidMount = () => {
@@ -35,15 +49,39 @@ class ListPosts extends Component {
       goTo,
       posts,
       ordering,
-      setOrdering
+      setOrdering,
+      goToCreator,
+      classes
     } = this.props;
     const filtredPosts = this.filterPosts(posts, currentCategory);
     const filteredAndOrderedPosts = this.orderPosts(filtredPosts, ordering);
     return (
       <div>
         <Categories data={categories} selected={currentCategory} goTo={goTo} />
-        <Button variant="contained" color="secondary" onClick={() => goTo('posts/new')} >NEW POST</Button>
-        <Posts posts={filteredAndOrderedPosts} />
+        <Button
+          className={classes.button}
+          variant="contained"
+          color="secondary"
+          onClick={goToCreator('/posts/new')}
+        >
+          NEW POST
+        </Button>
+
+        {filteredAndOrderedPosts &&
+          filteredAndOrderedPosts.map(p => (
+            <Card key={p.id} className={classes.card}>
+              <CardHeader
+                className={classes.card}
+                title={p.title}
+                subheader={`Posted by ${p.author} on ${format(
+                  p.timestamp,
+                  'DD/MM/YYYY'
+                )} in ${p.category} with ${p.voteScore} votes`}
+                onClick={goToCreator(`/posts/${p.id}`)}
+              />
+            </Card>
+          ))}
+
         <OrderBar index={ordering} change={setOrdering} />
       </div>
     );
@@ -60,7 +98,10 @@ const mapStateToProps = (state, ownProps) => ({
 const mapDispatchToProps = (dispatch, ownProps) => ({
   init: () => dispatch({ type: 'INIT' }),
   goTo: target => dispatch(push(target)),
+  goToCreator: target => () => dispatch(push(target)),
   setOrdering: (event, value) => dispatch(selectOrdering(value))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(ListPosts);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  withStyles(styles)(ListPosts)
+);
