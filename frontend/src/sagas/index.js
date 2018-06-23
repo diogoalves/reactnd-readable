@@ -54,15 +54,17 @@ function* removeComment(action) {
 }
 
 function* upVoteComment(action) {
-  const { id } = action;
+  const { id, post_id } = action;
   yield call(Api.upVoteComment, id);
-  yield call(fetchAll);
+  const comments = yield call(Api.getCommentsByPostId, post_id);
+  yield put(updateAll({ comments })); //todo improve to update only the selected post
 }
 
 function* downVoteComment(action) {
-  const { id } = action;
+  const { id, post_id } = action;
   yield call(Api.downVoteComment, id);
-  yield call(fetchAll);
+  const comments = yield call(Api.getCommentsByPostId, post_id);
+  yield put(updateAll({ comments })); //todo improve to update only the selected post
 }
 
 function* updatePost(action) {
