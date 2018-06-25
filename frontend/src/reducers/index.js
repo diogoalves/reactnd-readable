@@ -1,26 +1,31 @@
-// import { combineReducers } from 'redux';
-import { UPDATE_ALL, SELECT_ORDERING } from '../actions';
+import {
+  POSTS_AND_CATEGORIES_FETCH_SUCCESSFUL,
+  POST_DETAIL_FETCH_SUCCESSFUL
+} from '../actions';
 
 export const initialState = {
   categories: [],
   posts: [],
-  comments: [],
-  ordering: 0
+  comments: []
 };
 
-const post = (state = { a: 1 }, action) => {
-  const { type } = action;
+const reducer = (state = initialState, action) => {
+  const { type, payload } = action;
   switch (type) {
-    case UPDATE_ALL:
+    case POSTS_AND_CATEGORIES_FETCH_SUCCESSFUL:
       return {
         ...state,
-        ...action.data
+        categories: payload.categories,
+        posts: payload.posts
       };
 
-    case SELECT_ORDERING:
+    case POST_DETAIL_FETCH_SUCCESSFUL:
+      const { post, comments } = payload;
+      const oldPosts = state.posts.filter(e => e.id !== post.id);
       return {
         ...state,
-        ordering: action.index
+        posts: [...oldPosts, post],
+        comments: comments
       };
 
     default:
@@ -28,4 +33,4 @@ const post = (state = { a: 1 }, action) => {
   }
 };
 
-export default post;
+export default reducer;

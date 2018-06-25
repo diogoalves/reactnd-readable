@@ -3,12 +3,18 @@ import { connect } from 'react-redux';
 import Categories from './Categories';
 import OrderBar from './OrderBar';
 import { push } from 'connected-react-router';
-import { selectOrdering } from '../actions';
+import actions from '../actions';
 import Button from '@material-ui/core/Button';
 import { format } from 'date-fns';
 import Card from '@material-ui/core/Card';
 import CardHeader from '@material-ui/core/CardHeader';
+import CardActions from '@material-ui/core/CardActions';
 import { withStyles } from '@material-ui/core/styles';
+import {
+  orderByVoteScore,
+  orderByTimeStamp,
+  filterDeleted
+} from '../utils/sorting';
 
 const styles = theme => ({
   card: {
@@ -22,6 +28,10 @@ const styles = theme => ({
 });
 
 class ListPosts extends Component {
+  state = {
+    ordering: 0
+  };
+
   componentDidMount = () => {
     this.props.init();
   };
@@ -34,12 +44,17 @@ class ListPosts extends Component {
     }
   };
 
-  orderPosts = (posts = [], ordering) => {
+  orderPosts = (posts = []) => {
+    const { ordering } = this.state;
     if (ordering <= 0) {
-      return posts.sort((a, b) => a.voteScore < b.voteScore);
+      return orderByVoteScore(posts);
     } else {
-      return posts.sort((a, b) => a.timestamp < b.timestamp);
+      return orderByTimeStamp(posts);
     }
+  };
+
+  handleOrdering = (event, value) => {
+    this.setState({ ordering: value });
   };
 
   render() {
@@ -48,12 +63,16 @@ class ListPosts extends Component {
       currentCategory,
       goTo,
       posts,
-      ordering,
-      setOrdering,
       goToCreator,
+      upVoteCreator,
+      downVoteCreator,
+
       classes
     } = this.props;
-    const filtredPosts = this.filterPosts(posts, currentCategory);
+    const { ordering } = this.state;
+
+    const filteredDeleted = filterDeleted(posts);
+    const filtredPosts = this.filterPosts(filteredDeleted, currentCategory);
     const filteredAndOrderedPosts = this.orderPosts(filtredPosts, ordering);
     return (
       <div>
@@ -76,13 +95,25 @@ class ListPosts extends Component {
                 subheader={`Posted by ${p.author} on ${format(
                   p.timestamp,
                   'DD/MM/YYYY'
-                )} in ${p.category} with ${p.voteScore} votes`}
-                onClick={goToCreator(`/posts/${p.id}`)}
+                )} in ${p.category} with ${p.voteScore} votes. ${
+                  p.commentCount
+                } comments`}
               />
+              <CardActions>
+                <Button size="small" onClick={upVoteCreator(p.id)}>
+                  ▲UPVOTE
+                </Button>
+                <Button size="small" onClick={downVoteCreator(p.id)}>
+                  ▼DOWNVOTE
+                </Button>
+                <Button size="small" onClick={goToCreator(`/posts/${p.id}`)}>
+                  OPEN
+                </Button>
+              </CardActions>
             </Card>
           ))}
 
-        <OrderBar index={ordering} change={setOrdering} />
+        <OrderBar index={ordering} change={this.handleOrdering} />
       </div>
     );
   }
@@ -91,15 +122,15 @@ class ListPosts extends Component {
 const mapStateToProps = (state, ownProps) => ({
   categories: state.categories,
   posts: state.posts,
-  currentCategory: ownProps.match.params.category,
-  ordering: state.ordering
+  currentCategory: ownProps.match.params.category
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  init: () => dispatch({ type: 'INIT' }),
+  init: () => dispatch(actions.fetchPostsAndCategories()),
   goTo: target => dispatch(push(target)),
   goToCreator: target => () => dispatch(push(target)),
-  setOrdering: (event, value) => dispatch(selectOrdering(value))
+  upVoteCreator: post_id => () => dispatch(actions.upVotePost({ post_id })),
+  downVoteCreator: post_id => () => dispatch(actions.downVotePost({ post_id }))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

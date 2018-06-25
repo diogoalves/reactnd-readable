@@ -1,96 +1,33 @@
-import guid from '../utils/guid';
+export const POST_ADD = 'POST_ADD';
+export const POST_EDIT = 'POST_EDIT';
+export const POST_REMOVE = 'POST_REMOVE';
+export const POST_UPVOTE = 'POST_UPVOTE';
+export const POST_DOWNVOTE = 'POST_DOWNVOTE';
+export const COMMENT_ADD = 'COMMENT_ADD';
+export const COMMENT_EDIT = 'COMMENT_EDIT';
+export const COMMENT_REMOVE = 'COMMENT_REMOVE';
+export const COMMENT_UPVOTE = 'COMMENT_UPVOTE';
+export const COMMENT_DOWNVOTE = 'COMMENT_DOWNVOTE';
+export const POSTS_AND_CATEGORIES_FETCH = 'POSTS_AND_CATEGORIES_FETCH';
+export const POST_DETAIL_FETCH = 'POST_DETAIL_FETCH';
 
-export const ADD_POST = 'ADD_POST';
-export const EDIT_POST = 'EDIT_POST';
-export const UPDATE_POST = 'UPDATE_POST';
-export const REMOVE_POST = 'REMOVE_POST';
-export const UPVOTE_POST = 'UPVOTE_POST';
-export const DOWNVOTE_POST = 'DOWNVOTE_POST';
+export const POSTS_AND_CATEGORIES_FETCH_SUCCESSFUL =
+  'POSTS_AND_CATEGORIES_FETCH_SUCCESSFUL';
+export const POST_DETAIL_FETCH_SUCCESSFUL = 'POST_DETAIL_FETCH_SUCCESSFUL';
 
-export const ADD_COMMENT = 'ADD_COMMENT';
-export const REMOVE_COMMENT = 'REMOVE_COMMENT';
-export const UPVOTE_COMMENT = 'UPVOTE_COMMENT';
-export const DOWNVOTE_COMMENT = 'DOWNVOTE_COMMENT';
+const createAction = type => payload => ({ type, payload });
 
-export const UPDATE_ALL = 'UPDATE_ALL';
-export const SELECT_ORDERING = 'SELECT_ORDERING';
-
-export const INIT = 'INIT';
-export const FETCH_POST_DETAIL = 'FETCH_POST_DETAIL';
-
-export const addPost = (title, body, author, category) => ({
-  type: ADD_POST,
-  id: guid(),
-  timestamp: Date.now(),
-  title,
-  body,
-  author,
-  category
-});
-
-export const editPost = (id, title, body, author, category) => ({
-  type: UPDATE_POST,
-  id,
-  timestamp: Date.now(),
-  title,
-  body,
-  author,
-  category
-});
-
-export const removePost = id => ({
-  type: REMOVE_POST,
-  id
-});
-
-export const upVotePost = id => ({
-  type: UPVOTE_POST,
-  id
-});
-
-export const downVotePost = id => ({
-  type: DOWNVOTE_POST,
-  id
-});
-
-export const addComment = (body, author, parentId) => ({
-  type: ADD_COMMENT,
-  id: guid(),
-  timestamp: Date.now(),
-  body,
-  author,
-  parentId
-});
-
-export const removeComment = (id, post_id) => ({
-  type: REMOVE_COMMENT,
-  id,
-  post_id
-});
-
-export const upVoteComment = (id, post_id) => ({
-  type: UPVOTE_COMMENT,
-  id,
-  post_id
-});
-
-export const downVoteComment = (id, post_id) => ({
-  type: DOWNVOTE_COMMENT,
-  id,
-  post_id
-});
-
-export const updateAll = data => ({
-  type: UPDATE_ALL,
-  data
-});
-
-export const selectOrdering = index => ({
-  type: SELECT_ORDERING,
-  index
-});
-
-export const fetchPostDetails = post_id => ({
-  type: FETCH_POST_DETAIL,
-  post_id
-});
+export default {
+  addPost: createAction(POST_ADD),
+  editPost: createAction(POST_EDIT),
+  removePost: createAction(POST_REMOVE),
+  upVotePost: createAction(POST_UPVOTE),
+  downVotePost: createAction(POST_DOWNVOTE),
+  addComment: createAction(COMMENT_ADD),
+  editComment: createAction(COMMENT_EDIT),
+  removeComment: createAction(COMMENT_REMOVE),
+  upVoteComment: createAction(COMMENT_UPVOTE),
+  downVoteComment: createAction(COMMENT_DOWNVOTE),
+  fetchPostsAndCategories: createAction(POSTS_AND_CATEGORIES_FETCH),
+  fetchPostDetail: createAction(POST_DETAIL_FETCH)
+};

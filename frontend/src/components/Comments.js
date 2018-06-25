@@ -8,7 +8,7 @@ import Card from '@material-ui/core/Card';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
-import { upVoteComment, downVoteComment, removeComment } from '../actions';
+import actions from '../actions';
 
 const styles = theme => ({
   card: {
@@ -18,7 +18,8 @@ const styles = theme => ({
   },
   button: {
     marginLeft: theme.spacing.unit * 4,
-    marginUp: theme.spacing.unit * 3
+    marginUp: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit
   }
 });
 
@@ -28,10 +29,12 @@ class Comments extends Component {
       classes,
       comments,
       goToAddComment,
+      editCommentCreator,
       upVoteCreator,
       downVoteCreator,
       removeCreator
     } = this.props;
+
     return (
       <div>
         <Button
@@ -52,23 +55,16 @@ class Comments extends Component {
                     c.timestamp,
                     'DD/MM/YYYY'
                   )} with ${c.voteScore} votes`}
-                  <Button size="small">✎</Button>
-                  <Button
-                    size="small"
-                    onClick={upVoteCreator(c.id, c.parentId)}
-                  >
+                  <Button size="small" onClick={editCommentCreator(c.id)}>
+                    ✎
+                  </Button>
+                  <Button size="small" onClick={upVoteCreator(c.id)}>
                     ▲
                   </Button>
-                  <Button
-                    size="small"
-                    onClick={downVoteCreator(c.id, c.parentId)}
-                  >
+                  <Button size="small" onClick={downVoteCreator(c.id)}>
                     ▼
                   </Button>
-                  <Button
-                    size="small"
-                    onClick={removeCreator(c.id, c.parentId)}
-                  >
+                  <Button size="small" onClick={removeCreator(c.id)}>
                     🗑
                   </Button>
                 </Typography>
@@ -81,17 +77,24 @@ class Comments extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  comments: state.comments.filter(e => e.parentId === ownProps.post_id) || {}
+  comments: state.comments
+    .filter(e => e.parentId === ownProps.post_id && !e.deleted)
+    .sort((a, b) => a.voteScore < b.voteScore)
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  goToAddComment: () => dispatch(push('/')),
-  upVoteCreator: (comment_id, post_id) => () =>
-    dispatch(upVoteComment(comment_id, post_id)),
-  downVoteCreator: (comment_id, post_id) => () =>
-    dispatch(downVoteComment(comment_id, post_id)),
-  removeCreator: (comment_id, post_id) => () =>
-    dispatch(removeComment(comment_id, post_id))
+  goToAddComment: () =>
+    dispatch(push(`/posts/${ownProps.post_id}/new_comment`)),
+  editCommentCreator: comment_id => () =>
+    dispatch(push(`/posts/${ownProps.post_id}/edit_comment/${comment_id}`)),
+  upVoteCreator: comment_id => () =>
+    dispatch(actions.upVoteComment({ comment_id, post_id: ownProps.post_id })),
+  downVoteCreator: comment_id => () =>
+    dispatch(
+      actions.downVoteComment({ comment_id, post_id: ownProps.post_id })
+    ),
+  removeCreator: comment_id => () =>
+    dispatch(actions.removeComment({ comment_id, post_id: ownProps.post_id }))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(

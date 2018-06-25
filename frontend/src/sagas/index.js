@@ -1,103 +1,163 @@
 import { call, put, takeLatest } from 'redux-saga/effects';
+import guid from '../utils/guid';
 import Api from '../utils/api';
 import {
-  ADD_POST,
-  UPDATE_POST,
-  REMOVE_POST,
-  UPVOTE_POST,
-  DOWNVOTE_POST,
-  // ADD_COMMENT,
-  REMOVE_COMMENT,
-  UPVOTE_COMMENT,
-  DOWNVOTE_COMMENT,
-  FETCH_POST_DETAIL,
-  updateAll
+  POSTS_AND_CATEGORIES_FETCH,
+  POST_DETAIL_FETCH,
+  POSTS_AND_CATEGORIES_FETCH_SUCCESSFUL,
+  POST_DETAIL_FETCH_SUCCESSFUL,
+  POST_ADD,
+  POST_EDIT,
+  POST_REMOVE,
+  POST_UPVOTE,
+  POST_DOWNVOTE,
+  COMMENT_ADD,
+  COMMENT_EDIT,
+  COMMENT_REMOVE,
+  COMMENT_UPVOTE,
+  COMMENT_DOWNVOTE
 } from '../actions';
 
-function* fetchAll() {
-  const categories = yield call(Api.getAllCategories);
-  const posts = yield call(Api.getAllPosts);
-  yield put(updateAll({ ...categories, posts: posts }));
+function* fetchPostsAndCategories() {
+  try {
+    const categories = yield call(Api.getAllCategories);
+    const posts = yield call(Api.getAllPosts);
+    const payload = { ...categories, posts };
+    yield put({ type: POSTS_AND_CATEGORIES_FETCH_SUCCESSFUL, payload });
+  } catch (error) {
+    yield put({ type: 'ERROR', error });
+  }
+}
+
+function* fetchPostDetail(action) {
+  const post_id = action.payload.post_id;
+  try {
+    const post = yield call(Api.getPost, post_id);
+    const comments = yield call(Api.getCommentsByPostId, post_id);
+    const payload = { post, comments };
+    yield put({ type: POST_DETAIL_FETCH_SUCCESSFUL, payload });
+  } catch (error) {
+    yield put({ type: 'ERROR', error });
+  }
 }
 
 function* addPost(action) {
-  const { id, timestamp, title, body, author, category } = action;
-  yield call(Api.addPost, id, timestamp, title, body, author, category);
-  yield call(fetchAll);
+  try {
+    const { title, body, author, category } = action.payload;
+    const id = guid();
+    const timestamp = Date.now();
+    yield call(Api.addPost, id, timestamp, title, body, author, category);
+    // yield call(fetchPostsAndCategories);
+  } catch (error) {
+    yield put({ type: 'ERROR', error });
+  }
+}
+
+function* editPost(action) {
+  try {
+    const { id, timestamp, title, body, author, category } = action.payload;
+    yield call(Api.updatePost, id, timestamp, title, body, author, category);
+    yield call(fetchPostDetail, { payload: { post_id: id } });
+  } catch (error) {
+    yield put({ type: 'ERROR', error });
+  }
 }
 
 function* removePost(action) {
-  const { id } = action;
-  yield call(Api.removePost, id);
-  yield call(fetchAll);
+  try {
+    const { post_id } = action.payload;
+    yield call(Api.removePost, post_id);
+    // yield call(fetchPostsAndCategories);
+  } catch (error) {
+    yield put({ type: 'ERROR', error });
+  }
 }
 
 function* upVotePost(action) {
-  const { id, post_id } = action;
-  yield call(Api.upVotePost, id);
-  const comments = yield call(Api.getCommentsByPostId, post_id);
-  yield put(updateAll({ comments })); //todo improve to update only the selected post
+  try {
+    const { post_id } = action.payload;
+    yield call(Api.upVotePost, post_id);
+    yield call(fetchPostDetail, { payload: { post_id } });
+  } catch (error) {
+    yield put({ type: 'ERROR', error });
+  }
 }
 
 function* downVotePost(action) {
-  const { id, post_id } = action;
-  yield call(Api.downVotePost, id);
-  const comments = yield call(Api.getCommentsByPostId, post_id);
-  yield put(updateAll({ comments })); //todo improve to update only the selected post
+  try {
+    const { post_id } = action.payload;
+    yield call(Api.downVotePost, post_id);
+    yield call(fetchPostDetail, { payload: { post_id } });
+  } catch (error) {
+    yield put({ type: 'ERROR', error });
+  }
+}
+
+function* addComment(action) {
+  try {
+    const { title, body, author, parentId } = action.payload;
+    const id = guid();
+    const timestamp = Date.now();
+    yield call(Api.addComment, id, timestamp, title, body, author, parentId);
+    // yield call(fetchPostDetail, {payload: {post_id: parentId}});
+  } catch (error) {
+    yield put({ type: 'ERROR', error });
+  }
+}
+
+function* editComment(action) {
+  try {
+    const { id, timestamp, title, body, author, parentId } = action.payload;
+    yield call(Api.updateComment, id, timestamp, title, body, author, parentId);
+    // yield call(fetchPostDetail, {payload: {post_id: parentId}});
+  } catch (error) {
+    yield put({ type: 'ERROR', error });
+  }
 }
 
 function* removeComment(action) {
-  const { id, post_id } = action;
-  yield call(Api.removeComment, id);
-  const comments = yield call(Api.getCommentsByPostId, post_id);
-  yield put(updateAll({ comments })); //todo improve to update only the selected post
+  try {
+    const { comment_id, post_id } = action.payload;
+    yield call(Api.removeComment, comment_id);
+    yield call(fetchPostDetail, { payload: { post_id } });
+  } catch (error) {
+    yield put({ type: 'ERROR', error });
+  }
 }
 
 function* upVoteComment(action) {
-  const { id, post_id } = action;
-  yield call(Api.upVoteComment, id);
-  const comments = yield call(Api.getCommentsByPostId, post_id);
-  yield put(updateAll({ comments })); //todo improve to update only the selected post
+  try {
+    const { comment_id, post_id } = action.payload;
+    yield call(Api.upVoteComment, comment_id);
+    yield call(fetchPostDetail, { payload: { post_id } });
+  } catch (error) {
+    yield put({ type: 'ERROR', error });
+  }
 }
 
 function* downVoteComment(action) {
-  const { id, post_id } = action;
-  yield call(Api.downVoteComment, id);
-  const comments = yield call(Api.getCommentsByPostId, post_id);
-  yield put(updateAll({ comments })); //todo improve to update only the selected post
+  try {
+    const { comment_id, post_id } = action.payload;
+    yield call(Api.downVoteComment111, comment_id);
+    yield call(fetchPostDetail, { payload: { post_id } });
+  } catch (error) {
+    yield put({ type: 'ERROR', error });
+  }
 }
 
-function* updatePost(action) {
-  const { id, timestamp, title, body, author, category } = action;
-  const post = yield call(
-    Api.addPost,
-    id,
-    timestamp,
-    title,
-    body,
-    author,
-    category
-  );
-  yield put(updateAll({ posts: post }));
+function* saga() {
+  yield takeLatest(POSTS_AND_CATEGORIES_FETCH, fetchPostsAndCategories);
+  yield takeLatest(POST_DETAIL_FETCH, fetchPostDetail);
+  yield takeLatest(POST_ADD, addPost);
+  yield takeLatest(POST_EDIT, editPost);
+  yield takeLatest(POST_REMOVE, removePost);
+  yield takeLatest(POST_UPVOTE, upVotePost);
+  yield takeLatest(POST_DOWNVOTE, downVotePost);
+  yield takeLatest(COMMENT_ADD, addComment);
+  yield takeLatest(COMMENT_EDIT, editComment);
+  yield takeLatest(COMMENT_REMOVE, removeComment);
+  yield takeLatest(COMMENT_UPVOTE, upVoteComment);
+  yield takeLatest(COMMENT_DOWNVOTE, downVoteComment);
 }
 
-function* fetchPostDetail({ post_id }) {
-  const post = yield call(Api.getPost, post_id);
-  const comments = yield call(Api.getCommentsByPostId, post_id);
-  yield put(updateAll({ posts: [{ ...post }], comments })); //todo improve to update only the selected post
-}
-
-function* mySaga() {
-  yield takeLatest('INIT', fetchAll);
-  yield takeLatest(ADD_POST, addPost);
-  yield takeLatest(REMOVE_POST, removePost);
-  yield takeLatest(UPVOTE_POST, upVotePost);
-  yield takeLatest(DOWNVOTE_POST, downVotePost);
-  yield takeLatest(REMOVE_COMMENT, removeComment);
-  yield takeLatest(UPVOTE_COMMENT, upVoteComment);
-  yield takeLatest(DOWNVOTE_COMMENT, downVoteComment);
-  yield takeLatest(UPDATE_POST, updatePost);
-  yield takeLatest(FETCH_POST_DETAIL, fetchPostDetail);
-}
-
-export default mySaga;
+export default saga;

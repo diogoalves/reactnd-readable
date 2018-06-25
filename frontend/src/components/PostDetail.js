@@ -10,12 +10,7 @@ import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { format } from 'date-fns';
-import {
-  removePost,
-  upVotePost,
-  downVotePost,
-  fetchPostDetails
-} from '../actions';
+import actions from '../actions';
 import Comments from './Comments';
 import IconButton from '@material-ui/core/IconButton';
 import CancelIcon from '@material-ui/icons/Cancel';
@@ -35,6 +30,7 @@ class PostDetail extends Component {
     const {
       classes,
       post_id,
+      edit,
       goMainScreen,
       post,
       upVote,
@@ -51,7 +47,9 @@ class PostDetail extends Component {
             subheader={`Posted by ${post.author} on ${format(
               post.timestamp,
               'DD/MM/YYYY'
-            )} in ${post.category} with ${post.voteScore} votes`}
+            )} in ${post.category} with ${post.voteScore} votes ${
+              post.commentCount
+            } comments`}
             action={
               <IconButton>
                 <CancelIcon onClick={goMainScreen} />
@@ -62,7 +60,7 @@ class PostDetail extends Component {
             <Typography component="p">{post.body}</Typography>
           </CardContent>
           <CardActions>
-            <Button size="small" onClick={removePost}>
+            <Button size="small" onClick={edit}>
               ✎EDIT
             </Button>
             <Button size="small" onClick={upVote}>
@@ -88,12 +86,18 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  init: () => dispatch(fetchPostDetails(ownProps.match.params.post_id)),
+  init: () =>
+    dispatch(
+      actions.fetchPostDetail({ post_id: ownProps.match.params.post_id })
+    ),
+  edit: () => dispatch(push(`/posts/${ownProps.match.params.post_id}/edit`)),
   goMainScreen: () => dispatch(push('/')),
-  upVote: () => dispatch(upVotePost(ownProps.match.params.post_id)),
-  downVote: () => dispatch(downVotePost(ownProps.match.params.post_id)),
+  upVote: () =>
+    dispatch(actions.upVotePost({ post_id: ownProps.match.params.post_id })),
+  downVote: () =>
+    dispatch(actions.downVotePost({ post_id: ownProps.match.params.post_id })),
   removePost: () => {
-    dispatch(removePost(ownProps.match.params.post_id));
+    dispatch(actions.removePost({ post_id: ownProps.match.params.post_id }));
     dispatch(push('/'));
   }
 });

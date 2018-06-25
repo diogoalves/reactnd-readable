@@ -25,9 +25,22 @@ export const getCommentsByPostId = post_id =>
     res.json()
   );
 
+export const getComment = comment_id =>
+  fetch(`${api}/coments/${comment_id}`, { headers }).then(res => res.json());
+
 export const addPost = (id, timestamp, title, body, author, category) =>
   fetch(`${api}/posts`, {
     method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id, timestamp, title, body, author, category })
+  }).then(res => res.json());
+
+export const updatePost = (id, timestamp, title, body, author, category) =>
+  fetch(`${api}/posts/${id}`, {
+    method: 'PUT',
     headers: {
       ...headers,
       'Content-Type': 'application/json'
@@ -64,6 +77,26 @@ export const removePost = id =>
     }
   }).then(res => res.json());
 
+export const addComment = (id, timestamp, title, body, author, parentId) =>
+  fetch(`${api}/comments`, {
+    method: 'POST',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id, timestamp, title, body, author, parentId })
+  }).then(res => res.json());
+
+export const updateComment = (id, timestamp, title, body, author, parentId) =>
+  fetch(`${api}/comments/${id}`, {
+    method: 'PUT',
+    headers: {
+      ...headers,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ id, timestamp, title, body, author, parentId })
+  }).then(res => res.json());
+
 export const upVoteComment = id =>
   fetch(`${api}/comments/${id}`, {
     method: 'POST',
@@ -93,25 +126,19 @@ export const removeComment = id =>
     }
   }).then(res => res.json());
 
-export const update = (book, shelf) =>
-  fetch(`${api}/books/${book.id}`, {
-    method: 'PUT',
-    headers: {
-      ...headers,
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ shelf })
-  }).then(res => res.json());
-
 export default {
   getAllCategories,
   getAllPosts,
   getPost,
   getCommentsByPostId,
+  getComment,
   addPost,
+  updatePost,
   upVotePost,
   downVotePost,
   removePost,
+  addComment,
+  updateComment,
   upVoteComment,
   downVoteComment,
   removeComment
