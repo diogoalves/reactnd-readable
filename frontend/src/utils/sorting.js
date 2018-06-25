@@ -6,6 +6,4 @@ const orderByTimeStamp = (data = []) =>
 
 const filterDeleted = (data = []) => data.filter(e => !e.deleleted);
 
-const filterParentId = (data = []) => data.filter(e => !e.deleleted);
-
 export { orderByVoteScore, orderByTimeStamp, filterDeleted };
