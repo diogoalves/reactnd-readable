@@ -1,5 +1,6 @@
 import {
-  POSTS_AND_CATEGORIES_FETCH_SUCCESSFUL,
+  CATEGORIES_FETCH_SUCCESSFUL,
+  POSTS_FETCH_SUCCESSFUL,
   POST_DETAIL_FETCH_SUCCESSFUL
 } from '../actions';
 
@@ -12,7 +13,13 @@ export const initialState = {
 const reducer = (state = initialState, action) => {
   const { type, payload } = action;
   switch (type) {
-    case POSTS_AND_CATEGORIES_FETCH_SUCCESSFUL:
+    case CATEGORIES_FETCH_SUCCESSFUL:
+      return {
+        ...state,
+        categories: payload.categories
+      };
+
+    case POSTS_FETCH_SUCCESSFUL:
       return {
         ...state,
         categories: payload.categories,

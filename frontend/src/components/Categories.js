@@ -1,17 +1,23 @@
 import React from 'react';
+import { connect } from 'react-redux';
+import { push } from 'connected-react-router';
 import AppBar from '@material-ui/core/AppBar';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
+import actions from '../actions';
 
 class Categories extends React.Component {
+  componentDidMount = () => {
+    this.props.init();
+  };
+
   handleChange = (event, value) => {
-    const {data, goTo } = this.props;
-    if( (value-1) >= 0 && (value-1) < data.length ) {
-      goTo(`/${data[value-1].name}`);
+    const { data, goTo } = this.props;
+    if (value - 1 >= 0 && value - 1 < data.length) {
+      goTo(`/${data[value - 1].name}`);
     } else {
       goTo('/');
     }
-    
   };
 
   render() {
@@ -41,5 +47,15 @@ class Categories extends React.Component {
     );
   }
 }
+//ownProps.match.params.category
+const mapStateToProps = (state, ownProps) => ({
+  data: state.categories,
+  selected: 0
+});
 
-export default Categories;
+const mapDispatchToProps = dispatch => ({
+  init: () => dispatch(actions.fetchCategories()),
+  goTo: target => dispatch(push(target))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Categories);

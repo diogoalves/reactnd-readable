@@ -2,9 +2,11 @@ import { call, put, takeLatest } from 'redux-saga/effects';
 import guid from '../utils/guid';
 import Api from '../utils/api';
 import {
-  POSTS_AND_CATEGORIES_FETCH,
+  CATEGORIES_FETCH,
+  POSTS_FETCH,
   POST_DETAIL_FETCH,
-  POSTS_AND_CATEGORIES_FETCH_SUCCESSFUL,
+  CATEGORIES_FETCH_SUCCESSFUL,
+  POSTS_FETCH_SUCCESSFUL,
   POST_DETAIL_FETCH_SUCCESSFUL,
   POST_ADD,
   POST_EDIT,
@@ -18,12 +20,21 @@ import {
   COMMENT_DOWNVOTE
 } from '../actions';
 
-function* fetchPostsAndCategories() {
+function* fetchCategories() {
   try {
     const categories = yield call(Api.getAllCategories);
+    const payload = { ...categories };
+    yield put({ type: CATEGORIES_FETCH_SUCCESSFUL, payload });
+  } catch (error) {
+    yield put({ type: 'ERROR', error });
+  }
+}
+
+function* fetchPosts() {
+  try {
     const posts = yield call(Api.getAllPosts);
-    const payload = { ...categories, posts };
-    yield put({ type: POSTS_AND_CATEGORIES_FETCH_SUCCESSFUL, payload });
+    const payload = { posts };
+    yield put({ type: POSTS_FETCH_SUCCESSFUL, payload });
   } catch (error) {
     yield put({ type: 'ERROR', error });
   }
@@ -146,7 +157,8 @@ function* downVoteComment(action) {
 }
 
 function* saga() {
-  yield takeLatest(POSTS_AND_CATEGORIES_FETCH, fetchPostsAndCategories);
+  yield takeLatest(CATEGORIES_FETCH, fetchCategories);
+  yield takeLatest(POSTS_FETCH, fetchPosts);
   yield takeLatest(POST_DETAIL_FETCH, fetchPostDetail);
   yield takeLatest(POST_ADD, addPost);
   yield takeLatest(POST_EDIT, editPost);

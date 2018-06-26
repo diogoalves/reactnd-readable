@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Categories from './Categories';
 import OrderBar from './OrderBar';
 import { push } from 'connected-react-router';
 import actions from '../actions';
@@ -76,7 +75,6 @@ class ListPosts extends Component {
     const filteredAndOrderedPosts = this.orderPosts(filtredPosts, ordering);
     return (
       <div>
-        <Categories data={categories} selected={currentCategory} goTo={goTo} />
         <Button
           className={classes.button}
           variant="contained"
@@ -126,7 +124,7 @@ const mapStateToProps = (state, ownProps) => ({
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
-  init: () => dispatch(actions.fetchPostsAndCategories()),
+  init: () => dispatch(actions.fetchPosts()),
   goTo: target => dispatch(push(target)),
   goToCreator: target => () => dispatch(push(target)),
   upVoteCreator: post_id => () => dispatch(actions.upVotePost({ post_id })),

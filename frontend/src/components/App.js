@@ -1,15 +1,17 @@
 import React, { Component } from 'react';
 import { Route, Switch } from 'react-router'; // react-router v4
-import withRoot from '../withRoot';
+import Categories from './Categories';
 import ListPosts from './ListPosts';
 import FormPost from './FormPost';
 import FormComment from './FormComment';
 import PostDetail from './PostDetail';
+import withRoot from '../withRoot';
 
 class App extends Component {
   render() {
     return (
       <div>
+        <Categories />
         <Switch>
           <Route exact path="/" component={ListPosts} />
           <Route exact path="/posts/new" component={FormPost} />
