@@ -9,6 +9,10 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import CancelIcon from '@material-ui/icons/Cancel';
 import TextField from '@material-ui/core/TextField';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
 
 import { withStyles } from '@material-ui/core/styles';
 import actions from '../actions';
@@ -20,6 +24,10 @@ const styles = theme => ({
   button: {
     position: 'absolute',
     right: theme.spacing.unit * 4
+  },
+  formControl: {
+    marginTop: theme.spacing.unit,
+    minWidth: 250
   }
 });
 
@@ -29,7 +37,10 @@ class FormPost extends Component {
     title: this.props.initialValues.title || '',
     body: this.props.initialValues.body || '',
     author: this.props.initialValues.author || '',
-    category: this.props.initialValues.category || ''
+    category:
+      this.props.initialValues.category ||
+      (this.props.categories[0] && this.props.categories[0].name) ||
+      ''
   };
 
   handleChange = name => event => {
@@ -49,7 +60,7 @@ class FormPost extends Component {
   };
 
   render() {
-    const { classes, goBack } = this.props;
+    const { classes, goBack, categories } = this.props;
     const { title, body, author, category } = this.state;
     return (
       <Card className={classes.card}>
@@ -88,14 +99,24 @@ class FormPost extends Component {
               margin="normal"
               fullWidth
             />
-            <TextField
-              id="category"
-              label="category"
-              value={category}
-              onChange={this.handleChange('category')}
-              margin="normal"
-              fullWidth
-            />
+            <FormControl className={classes.formControl}>
+              <InputLabel>category</InputLabel>
+              <Select
+                value={category}
+                onChange={this.handleChange('category')}
+                inputProps={{
+                  name: 'category',
+                  id: 'category'
+                }}
+              >
+                {categories &&
+                  categories.map(c => (
+                    <MenuItem key={c.name} value={c.name}>
+                      {c.name}
+                    </MenuItem>
+                  ))}
+              </Select>
+            </FormControl>
           </form>
         </CardContent>
         <CardActions>
@@ -118,7 +139,8 @@ class FormPost extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
   initialValues:
-    state.posts.find(e => e.id === ownProps.match.params.post_id) || {}
+    state.posts.find(e => e.id === ownProps.match.params.post_id) || {},
+  categories: state.categories
 });
 
 const mapDispatchToProps = dispatch => ({
