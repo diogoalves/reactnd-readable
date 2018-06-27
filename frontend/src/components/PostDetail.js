@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { push } from 'connected-react-router';
+import { push, goBack } from 'connected-react-router';
 import { format } from 'date-fns';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
@@ -13,7 +13,6 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import { withStyles } from '@material-ui/core/styles';
 import actions from '../actions';
 import Comments from './Comments';
-
 import NotFound from './NotFound';
 
 const styles = theme => ({
@@ -32,12 +31,17 @@ class PostDetail extends Component {
       classes,
       post_id,
       edit,
+      goBack,
       goMainScreen,
       post,
       upVote,
       downVote,
       removePost
     } = this.props;
+
+    if (!post) {
+      return <NotFound onClick={goMainScreen} />;
+    }
 
     return (
       <div>
@@ -53,7 +57,7 @@ class PostDetail extends Component {
             } comments`}
             action={
               <IconButton>
-                <CancelIcon onClick={goMainScreen} />
+                <CancelIcon onClick={goBack} />
               </IconButton>
             }
           />
@@ -83,7 +87,7 @@ class PostDetail extends Component {
 
 const mapStateToProps = (state, ownProps) => ({
   post_id: ownProps.match.params.post_id,
-  post: state.posts.find(e => e.id === ownProps.match.params.post_id) || {}
+  post: state.posts.find(e => e.id === ownProps.match.params.post_id)
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
@@ -92,6 +96,7 @@ const mapDispatchToProps = (dispatch, ownProps) => ({
       actions.fetchPostDetail({ post_id: ownProps.match.params.post_id })
     ),
   edit: () => dispatch(push(`/posts/${ownProps.match.params.post_id}/edit`)),
+  goBack: () => dispatch(goBack()),
   goMainScreen: () => dispatch(push('/')),
   upVote: () =>
     dispatch(actions.upVotePost({ post_id: ownProps.match.params.post_id })),
