@@ -22,7 +22,6 @@ const reducer = (state = initialState, action) => {
     case POSTS_FETCH_SUCCESSFUL:
       return {
         ...state,
-        categories: payload.categories,
         posts: payload.posts
       };
 

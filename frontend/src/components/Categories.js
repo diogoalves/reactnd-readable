@@ -22,18 +22,10 @@ class Categories extends React.Component {
 
   render() {
     const { data, selected } = this.props;
-    const value = data.findIndex((e, i) => {
-      if (e.name === selected) {
-        return true;
-      } else {
-        return false;
-      }
-    });
-
     return (
       <AppBar position="static" color="default">
         <Tabs
-          value={value + 1}
+          value={selected}
           onChange={this.handleChange}
           indicatorColor="primary"
           textColor="primary"
@@ -47,10 +39,12 @@ class Categories extends React.Component {
     );
   }
 }
-//ownProps.match.params.category
-const mapStateToProps = (state, ownProps) => ({
+const mapStateToProps = state => ({
   data: state.categories,
-  selected: 0
+  selected:
+    state.categories.findIndex(e =>
+      state.router.location.pathname.includes(e.name)
+    ) + 1
 });
 
 const mapDispatchToProps = dispatch => ({

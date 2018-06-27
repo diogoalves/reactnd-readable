@@ -58,7 +58,6 @@ function* addPost(action) {
     const id = guid();
     const timestamp = Date.now();
     yield call(Api.addPost, id, timestamp, title, body, author, category);
-    // yield call(fetchPostsAndCategories);
   } catch (error) {
     yield put({ type: 'ERROR', error });
   }
@@ -78,7 +77,6 @@ function* removePost(action) {
   try {
     const { post_id } = action.payload;
     yield call(Api.removePost, post_id);
-    // yield call(fetchPostsAndCategories);
   } catch (error) {
     yield put({ type: 'ERROR', error });
   }
@@ -110,7 +108,6 @@ function* addComment(action) {
     const id = guid();
     const timestamp = Date.now();
     yield call(Api.addComment, id, timestamp, title, body, author, parentId);
-    // yield call(fetchPostDetail, {payload: {post_id: parentId}});
   } catch (error) {
     yield put({ type: 'ERROR', error });
   }
@@ -120,7 +117,6 @@ function* editComment(action) {
   try {
     const { id, timestamp, title, body, author, parentId } = action.payload;
     yield call(Api.updateComment, id, timestamp, title, body, author, parentId);
-    // yield call(fetchPostDetail, {payload: {post_id: parentId}});
   } catch (error) {
     yield put({ type: 'ERROR', error });
   }
@@ -149,7 +145,7 @@ function* upVoteComment(action) {
 function* downVoteComment(action) {
   try {
     const { comment_id, post_id } = action.payload;
-    yield call(Api.downVoteComment111, comment_id);
+    yield call(Api.downVoteComment, comment_id);
     yield call(fetchPostDetail, { payload: { post_id } });
   } catch (error) {
     yield put({ type: 'ERROR', error });

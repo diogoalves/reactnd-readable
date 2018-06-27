@@ -58,9 +58,7 @@ class ListPosts extends Component {
 
   render() {
     const {
-      categories,
       currentCategory,
-      goTo,
       posts,
       goToCreator,
       upVoteCreator,
@@ -85,8 +83,8 @@ class ListPosts extends Component {
         </Button>
 
         {filteredAndOrderedPosts &&
-          filteredAndOrderedPosts.map(p => (
-            <Card key={p.id} className={classes.card}>
+          filteredAndOrderedPosts.map((p, i) => (
+            <Card key={i} className={classes.card}>
               <CardHeader
                 className={classes.card}
                 title={p.title}
@@ -118,14 +116,12 @@ class ListPosts extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => ({
-  categories: state.categories,
   posts: state.posts,
   currentCategory: ownProps.match.params.category
 });
 
 const mapDispatchToProps = (dispatch, ownProps) => ({
   init: () => dispatch(actions.fetchPosts()),
-  goTo: target => dispatch(push(target)),
   goToCreator: target => () => dispatch(push(target)),
   upVoteCreator: post_id => () => dispatch(actions.upVotePost({ post_id })),
   downVoteCreator: post_id => () => dispatch(actions.downVotePost({ post_id }))
